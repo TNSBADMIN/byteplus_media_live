@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="my.com.teknoniaga.byteplus_media_live">
+
+    <!-- Add CAMERA permission -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Add MICROPHONE permission -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+</manifest>

@@ -1,0 +1,85 @@
+group 'my.com.teknoniaga.byteplus_media_live'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.7.10'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://artifact.bytedance.com/repository/Volcengine/'
+        }
+        maven {
+            url 'https://artifact.byteplus.com/repository/public/'
+        }
+    }
+}
+
+apply from: 'https://ve-vos.volccdn.com/script/vevos-repo-base.gradle'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace 'my.com.teknoniaga.byteplus_media_live'
+    }
+
+    compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 19
+    }
+
+    dependencies {
+        testImplementation 'org.jetbrains.kotlin:kotlin-test'
+        testImplementation 'org.mockito:mockito-core:5.0.0'
+
+        implementation 'com.bytedanceapi:ttsdk-ttlivepush_rtc:1.38.200.3'
+        implementation 'com.bytedanceapi:ttsdk-ttlivepull_rtc:1.38.200.3'
+        implementation "com.bytedance.applog:RangersAppLog-Lite-global:6.14.2"
+
+        // add third party dependencies
+        implementation 'commons-net:commons-net:3.6'
+        implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+        implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha12"
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen { false }
+                showStandardStreams = true
+            }
+        }
+    }
+}
