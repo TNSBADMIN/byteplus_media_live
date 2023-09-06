@@ -1,3 +1,5 @@
+import 'package:byteplus_media_live/models/push_player_data.dart';
+import 'package:byteplus_media_live/models/push_player_option.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class PushView extends StatelessWidget {
-  const PushView({super.key, required this.pushUrl});
+  const PushView(
+      {super.key,
+      required this.pushUrl,
+      this.option = const PushPlayerOption()});
 
   final Uri pushUrl;
+
+  final PushPlayerOption option;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +37,7 @@ class PushView extends StatelessWidget {
           id: params.id,
           viewType: viewType,
           layoutDirection: TextDirection.ltr,
-          creationParams:
-              'rtmp://byteplus.teknoniaga.com.my/live/testy?expire=1694744745&sign=45f1033b1b98b141920d6773df0a1ceb',
+          creationParams: PushPlayerData(pushUrl.toString(), option).toJson(),
           creationParamsCodec: const StandardMessageCodec(),
           onFocus: () {
             params.onFocusChanged(true);
