@@ -5,6 +5,11 @@ import android.content.Context
 import android.view.SurfaceView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.pandora.ttsdk.newapi.LiveCoreBuilder
+import com.ss.avframework.livestreamv2.Constants.MSG_INFO_AUDIO_STARTED_CAPTURE
+import com.ss.avframework.livestreamv2.Constants.MSG_INFO_AUDIO_STOPED_CAPTURE
+import com.ss.avframework.livestreamv2.Constants.MSG_INFO_STARTING_PUBLISH
+import com.ss.avframework.livestreamv2.Constants.MSG_INFO_VIDEO_STARTED_CAPTURE
+import com.ss.avframework.livestreamv2.Constants.MSG_INFO_VIDEO_STOPED_CAPTURE
 import com.ss.avframework.livestreamv2.core.LiveCore
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
@@ -14,12 +19,17 @@ import my.com.teknoniaga.byteplus_media_live.models.PushEngineController
 import my.com.teknoniaga.byteplus_media_live.models.PushPlayerOption
 import com.ss.avframework.livestreamv2.ILiveStream
 import com.ss.avframework.livestreamv2.ILiveStream.ILiveStreamErrorListener
+import com.ss.videoarch.liveplayer.model.LiveInfoSource
+import com.ss.videoarch.liveplayer.model.LiveStreamInfo
 
 
 @SuppressLint("ViewConstructor")
 class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, option: PushPlayerOption) : ConstraintLayout(context), PushEngineController, MethodCallHandler {
 
     private var pushEngine: LiveCore? = null
+
+    private var isAudioCaptured: Boolean = false
+    private var isVideoCaptured: Boolean = false
 
     init {
         inflate(context, R.layout.layout_push_view, this)
@@ -33,9 +43,24 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
     }
 
 
+    override val audioCaptureStatus: Boolean
+        get() = isAudioCaptured
+
+    override val videoCaptureStatus: Boolean
+        get() = this.isVideoCaptured
+
+
     private fun setListener() {
 
         pushEngine?.setInfoListener { i, i1, i2 ->
+
+            when (i) {
+                MSG_INFO_AUDIO_STARTED_CAPTURE -> isAudioCaptured = true
+                MSG_INFO_AUDIO_STOPED_CAPTURE -> isAudioCaptured = false
+                MSG_INFO_VIDEO_STARTED_CAPTURE -> isVideoCaptured = true
+                MSG_INFO_VIDEO_STOPED_CAPTURE -> isVideoCaptured = false
+
+            }
 
         }
 
@@ -131,6 +156,10 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
 
                 return result.success("start live")
             }
+
+            "videoCaptureStatus" -> result.success(videoCaptureStatus)
+            "audioCaptureStatus" -> result.success(audioCaptureStatus)
+
 
             else -> result.notImplemented()
         }

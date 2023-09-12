@@ -37,9 +37,27 @@ class PushEngineController {
   /// [startVideoCapture] and [startAudioCapture] first, else
   /// this will not work.
   Future<void> startPublish(Uri uri) async {
+    // TODO better exception throw
+    assert(await audioCaptureStatus() && await videoCaptureStatus());
     final res =
         await _methodChannel.invokeMethod('startPublish', uri.toString());
 
     print("get data from native $res");
+  }
+
+  Future<bool> audioCaptureStatus() async {
+    final res = await _methodChannel.invokeMethod('audioCaptureStatus');
+
+    print("get data from native $res");
+
+    return res;
+  }
+
+  Future<bool> videoCaptureStatus() async {
+    final res = await _methodChannel.invokeMethod('videoCaptureStatus');
+
+    print("get data from native $res");
+
+    return res;
   }
 }
