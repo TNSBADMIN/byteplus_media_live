@@ -108,7 +108,6 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         println("ooooooooooooooo: " + call.method);
 
-        pushEngine?.audioDeviceStatus();
 
         when (call.method) {
             "test" -> {
