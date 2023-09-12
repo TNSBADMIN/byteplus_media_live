@@ -1,29 +1,24 @@
-import 'package:byteplus_media_live/models/push_engine_controller.dart';
-import 'package:byteplus_media_live/models/push_player_option.dart';
+import 'package:byteplus_media_live/models/pull_engine_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-class PushView extends StatelessWidget {
-  const PushView(
-      {super.key, this.option = const PushPlayerOption(), this.controller});
+class PullView extends StatelessWidget {
+  const PullView({super.key, this.controller});
 
-  final PushEngineController? controller;
-
-  final PushPlayerOption option;
+  final PullEngineController? controller;
 
   @override
   Widget build(BuildContext context) {
     // This is used in the platform side to register the view.
-    const String viewType = 'byteplus_push';
-    // // Pass parameters to the platform side.
-    // const Map<String, dynamic> creationParams = <String, dynamic>{};
+    const String viewType = 'byteplus_pull';
 
     return PlatformViewLink(
       viewType: viewType,
       surfaceFactory: (context, viewController) {
+        print("jalan sini pull");
         controller?.initialize(viewController.viewId);
 
         return AndroidViewSurface(
@@ -37,7 +32,7 @@ class PushView extends StatelessWidget {
           id: params.id,
           viewType: viewType,
           layoutDirection: TextDirection.ltr,
-          creationParams: option.toJsonRaw(),
+          // creationParams: option.toJsonRaw(),
           creationParamsCodec: const StandardMessageCodec(),
           onFocus: () {
             params.onFocusChanged(true);

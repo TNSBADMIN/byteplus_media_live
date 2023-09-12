@@ -14,6 +14,7 @@ PushPlayerOption _$PushPlayerOptionFromJson(Map<String, dynamic> json) =>
       videoBitrate: json['videoBitrate'] as int? ?? 1200 * 1000,
       videoMaxBitrate: json['videoMaxBitrate'] as int? ?? 1900 * 1000,
       videoMinBitrate: json['videoMinBitrate'] as int? ?? 800 * 1000,
+      enablePreview: json['enablePreview'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$PushPlayerOptionToJson(PushPlayerOption instance) =>
@@ -24,4 +25,5 @@ Map<String, dynamic> _$PushPlayerOptionToJson(PushPlayerOption instance) =>
       'videoBitrate': instance.videoBitrate,
       'videoMaxBitrate': instance.videoMaxBitrate,
       'videoMinBitrate': instance.videoMinBitrate,
+      'enablePreview': instance.enablePreview,
     };

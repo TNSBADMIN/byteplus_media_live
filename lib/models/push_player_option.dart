@@ -12,14 +12,17 @@ class PushPlayerOption {
   final int videoBitrate;
   final int videoMaxBitrate;
   final int videoMinBitrate;
+  final bool enablePreview;
 
-  const PushPlayerOption(
-      {this.videoWidth = 720,
-      this.videoHeight = 12800,
-      this.videoFps = 15,
-      this.videoBitrate = 1200 * 1000,
-      this.videoMaxBitrate = 1900 * 1000,
-      this.videoMinBitrate = 800 * 1000});
+  const PushPlayerOption({
+    this.videoWidth = 720,
+    this.videoHeight = 1280,
+    this.videoFps = 15,
+    this.videoBitrate = 1200 * 1000,
+    this.videoMaxBitrate = 1900 * 1000,
+    this.videoMinBitrate = 800 * 1000,
+    this.enablePreview = true,
+  });
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$PushPlayerOptionFromJson()` constructor.

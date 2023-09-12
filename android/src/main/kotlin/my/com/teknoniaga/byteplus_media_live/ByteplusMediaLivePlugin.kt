@@ -32,7 +32,8 @@ class ByteplusMediaLivePlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
 
-        flutterPluginBinding.platformViewRegistry.registerViewFactory("byteplus_push", PushViewFactory())
+        flutterPluginBinding.platformViewRegistry.registerViewFactory("byteplus_push", PushViewFactory(flutterPluginBinding.binaryMessenger))
+        flutterPluginBinding.platformViewRegistry.registerViewFactory("byteplus_pull", PullViewFactory(flutterPluginBinding.binaryMessenger))
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
