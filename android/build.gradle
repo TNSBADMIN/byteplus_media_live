@@ -31,12 +31,14 @@ apply from: 'https://ve-vos.volccdn.com/script/vevos-repo-base.gradle'
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+
 android {
     if (project.android.hasProperty("namespace")) {
         namespace 'my.com.teknoniaga.byteplus_media_live'
     }
 
-    compileSdkVersion 34
+
+    compileSdk 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -56,12 +58,42 @@ android {
         minSdkVersion 19
     }
 
+    packagingOptions {
+        exclude('**/AudioDeviceObserver.class')
+    }
+
     dependencies {
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.1.1'
 
-        implementation 'com.bytedanceapi:ttsdk-ttlivepush_rtc:1.38.200.3'
-        implementation 'com.bytedanceapi:ttsdk-ttlivepull_rtc:1.38.200.3'
+
+        implementation('com.bytedanceapi:ttsdk-ttlivepush_rtc:1.38.200.3') {
+            def enableByteplusRTC = project.findProperty('byteplus.enableByteplusRTC')
+
+//            if (enableByteplusRTC == 'true') {
+            if (true) {
+                exclude group: 'com.bytedanceapi', module: 'ttsdk-ttrtcbase'
+                exclude group: 'com.volcengine.bpea', module: 'bpea-basics'
+                exclude group: 'com.volcengine.bpea', module: 'bpea-entry-ve'
+                exclude group: 'com.bytedance.ugc.framework.libs', module: 'ttvecamera'
+
+            }
+        }
+
+        implementation('com.bytedanceapi:ttsdk-ttlivepull_rtc:1.38.200.3') {
+            def enableByteplusRTC = project.findProperty('byteplus.enableByteplusRTC')
+
+//            if (enableByteplusRTC == 'true') {
+            if (true) {
+                exclude group: 'com.bytedanceapi', module: 'ttsdk-ttrtcbase'
+                exclude group: 'com.volcengine.bpea', module: 'bpea-basics'
+                exclude group: 'com.volcengine.bpea', module: 'bpea-entry-ve'
+                exclude group: 'com.bytedance.ugc.framework.libs', module: 'ttvecamera'
+            }
+        }
+
+        implementation files('libs/ttsdk-ttrtcbase-1.38.200.3.aar')
+
         implementation "com.bytedance.applog:RangersAppLog-Lite-global:6.14.2"
 
         // add third party dependencies
@@ -72,7 +104,9 @@ android {
 
         implementation 'com.google.code.gson:gson:2.9.0'
 
+
     }
+
 
     testOptions {
         unitTests.all {
@@ -86,3 +120,4 @@ android {
         }
     }
 }
+
