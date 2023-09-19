@@ -6,11 +6,15 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.com.google.cloud.artifactregistry:artifactregistry-gradle-plugin:2.2.1"
     }
 }
 
@@ -24,18 +28,26 @@ allprojects {
         maven {
             url 'https://artifact.byteplus.com/repository/public/'
         }
+
+//        maven {
+//            url "artifactregistry://asia-southeast1-maven.pkg.dev/tiktwin-888/byteplus"
+//        }
+
     }
 }
 
 apply from: 'https://ve-vos.volccdn.com/script/vevos-repo-base.gradle'
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: "com.google.cloud.artifactregistry.gradle-plugin"
 
 
 android {
     if (project.android.hasProperty("namespace")) {
         namespace 'my.com.teknoniaga.byteplus_media_live'
     }
+
+    def enableByteplusRTC = project.findProperty('byteplus.enableByteplusRTC') == 'true'
 
 
     compileSdk 34
@@ -58,41 +70,53 @@ android {
         minSdkVersion 19
     }
 
-    packagingOptions {
-        exclude('**/AudioDeviceObserver.class')
+    if (enableByteplusRTC) {
+        configurations {
+            implementation {
+//                exclude group: 'com.volcengine.bpea', module: 'bpea-basics'
+                exclude group: 'com.volcengine.bpea', module: 'bpea-entry-ve'
+                exclude group: 'com.bytedance.ugc.framework.libs', module: 'ttvecamera'
+            }
+        }
     }
+
 
     dependencies {
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.1.1'
 
-
+//        implementation group: 'com.tekno.byteplus.ttsdk', name: 'ttlivepush', version: '1.0.3'
+        if(enableByteplusRTC){
+            implementation group: 'com.tekno.byteplus.ttsdk', name: 'ttrtcbase', version: '1.0.8'
+        }
         implementation('com.bytedanceapi:ttsdk-ttlivepush_rtc:1.38.200.3') {
-            def enableByteplusRTC = project.findProperty('byteplus.enableByteplusRTC')
-
-//            if (enableByteplusRTC == 'true') {
-            if (true) {
+            if(enableByteplusRTC){
                 exclude group: 'com.bytedanceapi', module: 'ttsdk-ttrtcbase'
-                exclude group: 'com.volcengine.bpea', module: 'bpea-basics'
-                exclude group: 'com.volcengine.bpea', module: 'bpea-entry-ve'
-                exclude group: 'com.bytedance.ugc.framework.libs', module: 'ttvecamera'
-
             }
         }
+
+//        implementation('com.bytedanceapi:ttsdk-ttlivepush:1.38.200.3') {
+//
+//
+////            if (enableByteplusRTC == 'true') {
+//            exclude group: 'com.bytedanceapi', module: 'ttsdk-ttlivepush'
+//        }
 
         implementation('com.bytedanceapi:ttsdk-ttlivepull_rtc:1.38.200.3') {
-            def enableByteplusRTC = project.findProperty('byteplus.enableByteplusRTC')
-
-//            if (enableByteplusRTC == 'true') {
-            if (true) {
+            if(enableByteplusRTC){
                 exclude group: 'com.bytedanceapi', module: 'ttsdk-ttrtcbase'
-                exclude group: 'com.volcengine.bpea', module: 'bpea-basics'
-                exclude group: 'com.volcengine.bpea', module: 'bpea-entry-ve'
-                exclude group: 'com.bytedance.ugc.framework.libs', module: 'ttvecamera'
             }
-        }
 
-        implementation files('libs/ttsdk-ttrtcbase-1.38.200.3.aar')
+        }
+//            def enableByteplusRTC = project.findProperty('byteplus.enableByteplusRTC')
+//
+////            if (enableByteplusRTC == 'true') {
+//            if (true) {
+//                exclude group: 'com.bytedanceapi', module: 'ttsdk-ttlivepull'
+//            }
+//        }
+
+//        implementation(name: 'ttsdk-ttlivepush-1.38.200.3', ext: 'aar')
 
         implementation "com.bytedance.applog:RangersAppLog-Lite-global:6.14.2"
 
