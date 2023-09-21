@@ -11,6 +11,7 @@ class PushEngineController {
   }
 
   void initialize(int viewId) {
+    print("cccccccccccccccccccccccccccccccccccccccc $viewId");
     _methodChannelI = MethodChannel('push_engine_$viewId');
   }
 

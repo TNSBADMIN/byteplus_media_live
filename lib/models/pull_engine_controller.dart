@@ -1,10 +1,21 @@
+import 'package:byteplus_media_live/models/pull_engine_event_listener.dart';
 import 'package:byteplus_media_live/models/render_fill_mode.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+
+part '../widgets/pull_view.dart';
 
 class PullEngineController {
   MethodChannel? _internalMethodChannel;
 
-  PullEngineController();
+  /// A listener to bind with a class that you build
+  /// with extends of [MediaLivePullEngineEventListener]
+  MediaLivePullEngineEventListener? listener;
+
+  PullEngineController([this.listener]);
 
   MethodChannel get _methodChannel {
     if (_internalMethodChannel == null) {
@@ -13,9 +24,16 @@ class PullEngineController {
     return _internalMethodChannel!;
   }
 
-  void initialize(int viewId) {
+  /// A method that are called by internal logic to initialize this controller.
+  ///
+  /// This method do not need to call by normal implementation because
+  /// init the bridge between flutter and Android native view.
+  void _initialize(int viewId) {
+    listener?.viewId = viewId;
     print("pul xxx init");
     _internalMethodChannel = MethodChannel('pull_engine_$viewId');
+
+    listener?.onInitialized();
   }
 
   Future<void> test() async {

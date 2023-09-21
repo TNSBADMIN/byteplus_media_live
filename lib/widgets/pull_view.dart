@@ -1,9 +1,4 @@
-import 'package:byteplus_media_live/models/pull_engine_controller.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+part of '../models/pull_engine_controller.dart';
 
 class PullView extends StatelessWidget {
   const PullView({super.key, this.controller});
@@ -19,7 +14,7 @@ class PullView extends StatelessWidget {
       viewType: viewType,
       surfaceFactory: (context, viewController) {
         print("jalan sini pull");
-        controller?.initialize(viewController.viewId);
+        controller?._initialize(viewController.viewId);
 
         return AndroidViewSurface(
           controller: viewController as AndroidViewController,
