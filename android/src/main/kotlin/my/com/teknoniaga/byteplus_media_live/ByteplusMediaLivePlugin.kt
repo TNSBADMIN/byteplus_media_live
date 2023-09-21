@@ -65,12 +65,12 @@ class ByteplusMediaLivePlugin : FlutterPlugin, MethodCallHandler {
         println("xxx yyy $appVersion")
         var appChanel: String = call.argument<String>("appChanel") as String;
         println("xxx yyy $appChanel")
-        var licensePath: String = call.argument<String>("licensePath") as String;
-        println("xxx yyy $licensePath")
+        var licenseUrl: String = call.argument<String>("licenseUrl") as String;
+        println("xxx yyy $licenseUrl")
 
         println("xxx yyy masuk init 2")
 
-        initTTSDK(appId, appName, appVersion, appChanel, licensePath);
+        initTTSDK(appId, appName, appVersion, appChanel, licenseUrl);
 
         println("xxx yyy masuk init 2")
 
@@ -122,14 +122,14 @@ class ByteplusMediaLivePlugin : FlutterPlugin, MethodCallHandler {
     }
 
 
-    private fun initTTSDK(appId: String, appName: String, appVersion: String, appChanel: String, licensePath: String) {
+    private fun initTTSDK(appId: String, appName: String, appVersion: String, appChanel: String, licenseUrl: String) {
         Env.init(Config.Builder()
                 .setApplicationContext(context)
                 .setAppID(appId).setAppName(appName)
                 .setAppVersion(appVersion)
                 .setAppChannel(appChanel)
-//                .setLicenseUri("assets:///$licensePath")
-                .setLicenseUri("https://vod-license-m.bytepluscdn.com/obj/vod-license-sgcom/l-261-ch-fcdn_byteplus-a-521914.lic?x-expires=4846208832&x-signature=aYyu%2BhhINZ68Xp8ykfyBlgaiabw%3D")
+                .setLicenseUri(licenseUrl)
+//                .setLicenseUri("https://vod-license-m.bytepluscdn.com/obj/vod-license-sgcom/l-261-ch-fcdn_byteplus-a-521914.lic?x-expires=4846208832&x-signature=aYyu%2BhhINZ68Xp8ykfyBlgaiabw%3D")
                 .setLicenseCallback(mLicenseCallback).build())
     }
 

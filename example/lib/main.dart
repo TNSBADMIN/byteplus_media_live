@@ -68,10 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
           appId: '521914',
           appName: 'media_live_example',
           appChanel: 'chanel',
-          licensePath: 'l-261-ch-fcdn_byteplus-a-521914.lic',
+          licenseUrl: Uri.parse('url of byteplus licese'),
           version: '1.0.0');
       print('berjaya initialization');
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       print('ignore this error due to advice from byteplus team');
     }
     //

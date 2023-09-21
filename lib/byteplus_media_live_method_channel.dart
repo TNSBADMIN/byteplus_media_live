@@ -18,13 +18,13 @@ class MethodChannelByteplusMediaLive extends ByteplusMediaLivePlatform {
 
   @override
   Future<void> initTtSdk(String appId, String appName, String version,
-      String appChanel, String licensePath) async {
+      String appChanel, Uri licenseUrl) async {
     return await methodChannel.invokeMethod<void>('iniTtSdk', {
       "appId": appId,
       "appName": appName,
       "version": version,
       "appChanel": appChanel,
-      "licensePath": licensePath
+      "licenseUrl": licenseUrl.toString()
     });
   }
 

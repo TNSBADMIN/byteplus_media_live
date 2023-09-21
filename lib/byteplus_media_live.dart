@@ -10,9 +10,9 @@ class ByteplusMediaLive {
       required String appName,
       required String version,
       required String appChanel,
-      required String licensePath}) {
+      required Uri licenseUrl}) {
     return ByteplusMediaLivePlatform.instance
-        .initTtSdk(appId, appName, version, appChanel, licensePath);
+        .initTtSdk(appId, appName, version, appChanel, licenseUrl);
   }
 
   Future<Uri> createPullUri(String livePullUrl) {

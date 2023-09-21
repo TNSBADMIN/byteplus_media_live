@@ -28,7 +28,7 @@ abstract class ByteplusMediaLivePlatform extends PlatformInterface {
   }
 
   Future<void> initTtSdk(String appId, String appName, String version,
-      String appChanel, String licensePath);
+      String appChanel, Uri licenseUrl);
 
   Future<Uri> createPullUri(String livePullUrl);
 }
