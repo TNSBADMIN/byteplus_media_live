@@ -43,6 +43,12 @@ class PushEngineController {
     print("get data from native $res");
   }
 
+  Future<void> stopVideoCapture() async {
+    final res = await _methodChannel.invokeMethod('stopVideoCapture');
+
+    print("get data from native $res");
+  }
+
   Future<void> startAudioCapture() async {
     final status = await Permission.microphone.status;
 
@@ -51,6 +57,12 @@ class PushEngineController {
     }
 
     final res = await _methodChannel.invokeMethod('startAudioCapture');
+
+    print("get data from native $res");
+  }
+
+  Future<void> stopAudioCapture() async {
+    final res = await _methodChannel.invokeMethod('stopAudioCapture');
 
     print("get data from native $res");
   }
@@ -64,6 +76,12 @@ class PushEngineController {
     assert(await audioCaptureStatus() && await videoCaptureStatus());
     final res =
         await _methodChannel.invokeMethod('startPublish', uri.toString());
+
+    print("get data from native $res");
+  }
+
+  Future<void> stopPublish() async {
+    final res = await _methodChannel.invokeMethod('stopPublish');
 
     print("get data from native $res");
   }

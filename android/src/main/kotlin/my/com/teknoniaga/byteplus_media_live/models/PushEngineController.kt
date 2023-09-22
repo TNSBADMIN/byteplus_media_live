@@ -7,7 +7,7 @@ interface PushEngineController {
     fun startAudioCapture()
     fun stopAudioCapture()
     fun startPublish(url: String)
-    fun stopPublish(url: String)
+    fun stopPublish()
     val audioCaptureStatus: Boolean
     val videoCaptureStatus: Boolean
 }

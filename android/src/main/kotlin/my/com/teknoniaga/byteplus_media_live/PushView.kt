@@ -24,7 +24,12 @@ import com.ss.videoarch.liveplayer.model.LiveStreamInfo
 
 
 @SuppressLint("ViewConstructor")
-class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, option: PushPlayerOption) : ConstraintLayout(context), PushEngineController, MethodCallHandler {
+class PushView(
+    context: Context,
+    viewId: Int,
+    binaryMessenger: BinaryMessenger,
+    option: PushPlayerOption
+) : ConstraintLayout(context), PushEngineController, MethodCallHandler {
 
     private var pushEngine: LiveCore? = null
 
@@ -47,7 +52,7 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
         get() = isAudioCaptured
 
     override val videoCaptureStatus: Boolean
-        get() = this.isVideoCaptured
+        get() = isVideoCaptured
 
 
     private fun setListener() {
@@ -122,7 +127,7 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
         pushEngine?.start(url)
     }
 
-    override fun stopPublish(url: String) {
+    override fun stopPublish() {
         pushEngine?.stop()
     }
 
@@ -145,9 +150,19 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
                 return result.success("startVideoCapture")
             }
 
+            "stopVideoCapture" -> {
+                stopVideoCapture()
+                return result.success("stopVideoCapture")
+            }
+
             "startAudioCapture" -> {
                 startAudioCapture()
                 return result.success("startAudioCapture")
+            }
+
+            "stopAudioCapture" -> {
+                stopAudioCapture()
+                return result.success("stopAudioCapture")
             }
 
             "startPublish" -> {
@@ -155,6 +170,11 @@ class PushView(context: Context, viewId: Int, binaryMessenger: BinaryMessenger, 
                 startPublish(url)
 
                 return result.success("start live")
+            }
+
+            "stopPublish" -> {
+                stopPublish()
+                return result.success("stop")
             }
 
             "videoCaptureStatus" -> result.success(videoCaptureStatus)
