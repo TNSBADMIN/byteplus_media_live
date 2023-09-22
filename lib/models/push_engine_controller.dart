@@ -93,6 +93,14 @@ class PushEngineController {
     await _handleRequiredPermission(loop);
   }
 
+  Future<bool> checkRequiredPermission() async {
+    final micStatus = await Permission.microphone.status;
+    final camStatus = await Permission.camera.status;
+
+    return micStatus == PermissionStatus.granted &&
+        camStatus == PermissionStatus.granted;
+  }
+
   Future<void> _handleRequiredPermission(bool loop) async {
     final cameraStatus = await Permission.camera.status;
     final microphoneStatus = await Permission.microphone.status;
