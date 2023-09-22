@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 part '../widgets/pull_view.dart';
 
 class PullEngineController {
+  bool _initialized = false;
   MethodChannel? _internalMethodChannel;
 
   /// A listener to bind with a class that you build
@@ -30,7 +31,8 @@ class PullEngineController {
   /// init the bridge between flutter and Android native view.
   void _initialize(int viewId) {
     listener?.viewId = viewId;
-    listener?.controller = this;
+    if (!_initialized) listener?.controller = this;
+    _initialized = true;
     print("pul xxx init");
     _internalMethodChannel = MethodChannel('pull_engine_$viewId');
 

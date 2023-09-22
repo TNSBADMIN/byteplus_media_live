@@ -57,7 +57,7 @@ class PushView(
 
     private fun setListener() {
 
-        pushEngine?.setInfoListener { i, i1, i2 ->
+        pushEngine?.setInfoListener { i, _, _ ->
 
             when (i) {
                 MSG_INFO_AUDIO_STARTED_CAPTURE -> isAudioCaptured = true
@@ -69,7 +69,7 @@ class PushView(
 
         }
 
-        pushEngine?.setErrorListener { i, i1, e -> println("error mesej is: $e") }
+        pushEngine?.setErrorListener { _, _, e -> println("error mesej is: $e") }
     }
 
     private fun setupPushEngine(option: PushPlayerOption) {
