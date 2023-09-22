@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 part '../widgets/push_view.dart';
 
 class PushEngineController {
+  bool _initialized = false;
   MethodChannel? _methodChannelI;
 
   /// A listener to bind with a class that you build
@@ -26,7 +27,8 @@ class PushEngineController {
 
   void _initialize(int viewId) {
     listener?.viewId = viewId;
-    listener?.controller = this;
+    if (!_initialized) listener?.controller = this;
+    _initialized = true;
     _methodChannelI = MethodChannel('push_engine_$viewId');
     listener?.onInitialized();
   }
