@@ -89,11 +89,12 @@ class PushEngineController {
   ///
   /// [loop] if value are true, this method will loop the process
   /// of requesting permission until the user accept the permission.
-  Future<void> requestRequiredPermission({bool loop = false}) async {
+  Future<bool> requestRequiredPermission({bool loop = false}) async {
     await _handleRequiredPermission(loop);
+    return await checkRequiredPermission;
   }
 
-  Future<bool> checkRequiredPermission() async {
+  Future<bool> get checkRequiredPermission async {
     final micStatus = await Permission.microphone.status;
     final camStatus = await Permission.camera.status;
 
