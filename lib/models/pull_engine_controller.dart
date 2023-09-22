@@ -30,6 +30,7 @@ class PullEngineController {
   /// init the bridge between flutter and Android native view.
   void _initialize(int viewId) {
     listener?.viewId = viewId;
+    listener?.controller = this;
     print("pul xxx init");
     _internalMethodChannel = MethodChannel('pull_engine_$viewId');
 

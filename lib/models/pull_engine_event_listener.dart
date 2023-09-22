@@ -5,6 +5,7 @@ import 'package:byteplus_media_live/models/pull_engine_controller.dart';
 abstract class MediaLivePullEngineEventListener {
   /// This is a view id from a Android native view binding.
   int? viewId;
+  late final PullEngineController controller;
 
   /// This listener are called after the [PullEngineController]
   /// have been fully initialized.
