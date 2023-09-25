@@ -18,7 +18,7 @@ class MockByteplusMediaLivePlatform
 
   @override
   Future<void> initTtSdk(String appId, String appName, String version,
-      String appChanel, String licensePath) {
+      String appChanel, Uri licenseUrl) {
     // TODO: implement initTtSdk
     throw UnimplementedError();
   }

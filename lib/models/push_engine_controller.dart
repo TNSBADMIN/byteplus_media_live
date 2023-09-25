@@ -26,11 +26,16 @@ class PushEngineController {
   }
 
   void _initialize(int viewId) {
-    listener?.viewId = viewId;
-    if (!_initialized) listener?.controller = this;
-    _initialized = true;
-    _methodChannelI = MethodChannel('push_engine_$viewId');
-    listener?.onInitialized();
+    if (!_initialized) {
+      final channelName = "push_engine_$viewId";
+      _initialized = true;
+      listener?.viewId = viewId;
+      listener?.controller = this;
+      _methodChannelI = MethodChannel(channelName);
+      const eventChannel = EventChannel('xxx');
+      listener?.channel = eventChannel;
+      listener?.onInitialized();
+    }
   }
 
   Future<void> startVideoCapture() async {

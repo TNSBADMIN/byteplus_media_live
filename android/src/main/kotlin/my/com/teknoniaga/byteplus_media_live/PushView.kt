@@ -3,11 +3,11 @@ package my.com.teknoniaga.byteplus_media_live
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.SurfaceView
+import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.pandora.ttsdk.newapi.LiveCoreBuilder
 import com.ss.avframework.livestreamv2.Constants.MSG_INFO_AUDIO_STARTED_CAPTURE
 import com.ss.avframework.livestreamv2.Constants.MSG_INFO_AUDIO_STOPED_CAPTURE
-import com.ss.avframework.livestreamv2.Constants.MSG_INFO_STARTING_PUBLISH
 import com.ss.avframework.livestreamv2.Constants.MSG_INFO_VIDEO_STARTED_CAPTURE
 import com.ss.avframework.livestreamv2.Constants.MSG_INFO_VIDEO_STOPED_CAPTURE
 import com.ss.avframework.livestreamv2.core.LiveCore
@@ -17,10 +17,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import my.com.teknoniaga.byteplus_media_live.models.PushEngineController
 import my.com.teknoniaga.byteplus_media_live.models.PushPlayerOption
-import com.ss.avframework.livestreamv2.ILiveStream
-import com.ss.avframework.livestreamv2.ILiveStream.ILiveStreamErrorListener
-import com.ss.videoarch.liveplayer.model.LiveInfoSource
-import com.ss.videoarch.liveplayer.model.LiveStreamInfo
+import io.flutter.plugin.common.EventChannel
 
 
 @SuppressLint("ViewConstructor")
@@ -29,19 +26,24 @@ class PushView(
     viewId: Int,
     binaryMessenger: BinaryMessenger,
     option: PushPlayerOption
-) : ConstraintLayout(context), PushEngineController, MethodCallHandler {
+) : ConstraintLayout(context), PushEngineController, MethodCallHandler, EventChannel.StreamHandler {
 
+    private var sink: EventChannel.EventSink? = null
     private var pushEngine: LiveCore? = null
 
     private var isAudioCaptured: Boolean = false
     private var isVideoCaptured: Boolean = false
+    private var channel: MethodChannel;
 
     init {
         inflate(context, R.layout.layout_push_view, this)
+        val channelName = "push_engine_$viewId";
 
         //create a unique method channel for this instance
-        val channel = MethodChannel(binaryMessenger, "push_engine_$viewId")
+        channel = MethodChannel(binaryMessenger, channelName)
         channel.setMethodCallHandler(this)
+        val messageChannel = EventChannel(binaryMessenger, "xxx")
+        messageChannel.setStreamHandler(this)
 
         setupPushEngine(option)
         setListener()
@@ -55,15 +57,22 @@ class PushView(
         get() = isVideoCaptured
 
 
+    @UiThread
     private fun setListener() {
 
+
         pushEngine?.setInfoListener { i, _, _ ->
+
+            println("listener di setup $i sink  : ${sink == null}")
+//            channel.invokeMethod(i.toString(), null)
+            sink?.success("adadw");
 
             when (i) {
                 MSG_INFO_AUDIO_STARTED_CAPTURE -> isAudioCaptured = true
                 MSG_INFO_AUDIO_STOPED_CAPTURE -> isAudioCaptured = false
                 MSG_INFO_VIDEO_STARTED_CAPTURE -> isVideoCaptured = true
                 MSG_INFO_VIDEO_STOPED_CAPTURE -> isVideoCaptured = false
+
 
             }
 
@@ -131,18 +140,15 @@ class PushView(
         pushEngine?.stop()
     }
 
-    fun test() {
-        println("berjaya lari");
-    }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         println("ooooooooooooooo: " + call.method);
 
 
         when (call.method) {
-            "test" -> {
-                test()
-                return result.success("ada")
+            "setUpListener" -> {
+//                setListener()
+                return result.success("setUpListener")
             }
 
             "startVideoCapture" -> {
@@ -183,6 +189,17 @@ class PushView(
 
             else -> result.notImplemented()
         }
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+
+        println("lahdkladlkwad $events");
+        sink = events;
+
+    }
+
+    override fun onCancel(arguments: Any?) {
+        sink = null
     }
 
 

@@ -1,5 +1,5 @@
 import 'package:byteplus_media_live/byteplus_media_live.dart';
-import 'package:byteplus_media_live/widgets/push_view.dart';
+import 'package:byteplus_media_live/models/push_engine_controller.dart';
 import 'package:flutter/material.dart';
 
 void main() {
