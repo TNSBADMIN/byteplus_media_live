@@ -38,6 +38,12 @@ class PushEngineController {
     }
   }
 
+  Future<void> test() async {
+    final res = await _methodChannel.invokeMethod('test');
+
+    print("get data from native test $res");
+  }
+
   Future<void> startVideoCapture() async {
     final status = await Permission.camera.status;
 
