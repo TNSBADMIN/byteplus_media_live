@@ -31,9 +31,6 @@ class PushView(
 
     private var sink: EventChannel.EventSink? = null
     private var mLivePusher: VeLivePusher? = null
-
-    private var isAudioCaptured: Boolean = false
-    private var isVideoCaptured: Boolean = false
     private var channel: MethodChannel;
 
     private val uiThreadHandler: Handler = Handler(Looper.getMainLooper())
@@ -53,17 +50,14 @@ class PushView(
     }
 
 
-    override val audioCaptureStatus: Boolean
-        get() = isAudioCaptured
-
-    override val videoCaptureStatus: Boolean
-        get() = isVideoCaptured
-
+    private fun sendMessageToFlutter(message: Any): Unit {
+        uiThreadHandler.post { sink?.success(message) }
+    }
 
     @UiThread
     private fun setListener() {
 //        start new style
-        val listener = PusherEventListener();
+        val listener = PusherEventListener(::sendMessageToFlutter)
         // Set an observer to listen for live pusher events.
         mLivePusher?.setObserver(listener)
 
@@ -278,9 +272,6 @@ class PushView(
                 stopPublish()
                 return result.success("stop")
             }
-
-            "videoCaptureStatus" -> result.success(videoCaptureStatus)
-            "audioCaptureStatus" -> result.success(audioCaptureStatus)
 
 
             else -> result.notImplemented()

@@ -84,9 +84,15 @@ class PushEngineController {
   /// before this method are call you need to call
   /// [startVideoCapture] and [startAudioCapture] first, else
   /// this will not work.
+  ///
+  /// this method will only check for video and audio status if
+  /// you attach some [listener] to it, else you will need to
+  /// check it by your self manually
   Future<void> startPublish(Uri uri) async {
     // TODO better exception throw
-    assert(await audioCaptureStatus() && await videoCaptureStatus());
+    if (listener != null) {
+      assert(listener!.isAudioCaptured && listener!.isVideoCaptured);
+    }
     final res =
         await _methodChannel.invokeMethod('startPublish', uri.toString());
 
@@ -97,22 +103,6 @@ class PushEngineController {
     final res = await _methodChannel.invokeMethod('stopPublish');
 
     print("get data from native $res");
-  }
-
-  Future<bool> audioCaptureStatus() async {
-    final res = await _methodChannel.invokeMethod('audioCaptureStatus');
-
-    print("get data from native $res");
-
-    return res;
-  }
-
-  Future<bool> videoCaptureStatus() async {
-    final res = await _methodChannel.invokeMethod('videoCaptureStatus');
-
-    print("get data from native $res");
-
-    return res;
   }
 
   /// A method to request a permission for microphone
