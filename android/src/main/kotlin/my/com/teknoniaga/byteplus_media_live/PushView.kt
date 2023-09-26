@@ -87,12 +87,12 @@ class PushView(
         // Create a VeLiveAudioCaptureConfiguration instance.
         // Create a VeLiveAudioCaptureConfiguration instance.
         val audioCaptureConfig = VeLiveAudioCaptureConfiguration()
-// Set the sample rate. The default value is VeLiveAudioSampleRate44100.
-// Set the sample rate. The default value is VeLiveAudioSampleRate44100.
+        // Set the sample rate. The default value is VeLiveAudioSampleRate44100.
+        // Set the sample rate. The default value is VeLiveAudioSampleRate44100.
         audioCaptureConfig.sampleRate =
             VeLivePusherDef.VeLiveAudioSampleRate.VeLiveAudioSampleRate44100
-// Set the number of audio channels. The default value is VeLiveAudioChannelStereo.
-// Set the number of audio channels. The default value is VeLiveAudioChannelStereo.
+        // Set the number of audio channels. The default value is VeLiveAudioChannelStereo.
+        // Set the number of audio channels. The default value is VeLiveAudioChannelStereo.
         audioCaptureConfig.channel = VeLivePusherDef.VeLiveAudioChannel.VeLiveAudioChannelStereo
 
 
@@ -127,19 +127,19 @@ class PushView(
         videoEncoderConfig.codec = VeLivePusherDef.VeLiveVideoCodec.VeLiveVideoCodecH264
         // The target encoding bitrate, in Kbps.
         // The target encoding bitrate, in Kbps.
-        videoEncoderConfig.bitrate = 1200
+        videoEncoderConfig.bitrate = option.videoBitrate
         // The minimum video encoding bitrate, in Kbps, when the adaptive bitrate (ABR) feature is enabled.
         // The minimum video encoding bitrate, in Kbps, when the adaptive bitrate (ABR) feature is enabled.
-        videoEncoderConfig.minBitrate = 800
+        videoEncoderConfig.minBitrate = option.videoMinBitrate
         // The maximum video encoding bitrate, in Kbps, when the adaptive bitrate (ABR) feature is enabled.
         // The maximum video encoding bitrate, in Kbps, when the adaptive bitrate (ABR) feature is enabled.
-        videoEncoderConfig.maxBitrate = 1900
+        videoEncoderConfig.maxBitrate = option.videoMaxBitrate
         // The video GOP size, in seconds. The default value is 2.
         // The video GOP size, in seconds. The default value is 2.
         videoEncoderConfig.gopSize = 2
         // The encoded frame rate, in fps. The default value is 15.
         // The encoded frame rate, in fps. The default value is 15.
-        videoEncoderConfig.fps = 15
+        videoEncoderConfig.fps = option.videoFps
         // Whether to enable B frames. The default value is false.
         // Whether to enable B frames. The default value is false.
         videoEncoderConfig.isEnableBFrame = false
