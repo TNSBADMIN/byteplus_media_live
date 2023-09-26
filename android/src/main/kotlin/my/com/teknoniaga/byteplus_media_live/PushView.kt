@@ -7,7 +7,6 @@ import android.os.Looper
 import android.view.SurfaceView
 import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.pandora.ttsdk.newapi.LiveCoreBuilder
 import com.ss.avframework.live.VeLivePusher
 import com.ss.avframework.live.VeLivePusherConfiguration
 import com.ss.avframework.live.VeLivePusherDef
@@ -16,11 +15,6 @@ import com.ss.avframework.live.VeLivePusherDef.VeLiveAudioEncoderConfiguration
 import com.ss.avframework.live.VeLivePusherDef.VeLiveVideoCaptureConfiguration
 import com.ss.avframework.live.VeLivePusherDef.VeLiveVideoEncoderConfiguration
 import com.ss.avframework.live.VeLivePusherDef.VeLiveVideoResolution.VeLiveVideoResolution720P
-import com.ss.avframework.livestreamv2.Constants.MSG_INFO_AUDIO_STARTED_CAPTURE
-import com.ss.avframework.livestreamv2.Constants.MSG_INFO_AUDIO_STOPED_CAPTURE
-import com.ss.avframework.livestreamv2.Constants.MSG_INFO_VIDEO_STARTED_CAPTURE
-import com.ss.avframework.livestreamv2.Constants.MSG_INFO_VIDEO_STOPED_CAPTURE
-import com.ss.avframework.livestreamv2.core.LiveCore
 import com.ss.videoarch.liveplayer.AppInfo.mContext
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
@@ -34,14 +28,10 @@ import my.com.teknoniaga.byteplus_media_live.models.PusherEventListener
 
 @SuppressLint("ViewConstructor")
 class PushView(
-    context: Context,
-    viewId: Int,
-    binaryMessenger: BinaryMessenger,
-    option: PushPlayerOption
+    context: Context, viewId: Int, binaryMessenger: BinaryMessenger, option: PushPlayerOption
 ) : ConstraintLayout(context), PushEngineController, MethodCallHandler, EventChannel.StreamHandler {
 
     private var sink: EventChannel.EventSink? = null
-    private var pushEngine: LiveCore? = null
     private var mLivePusher: VeLivePusher? = null
 
     private var isAudioCaptured: Boolean = false
@@ -87,29 +77,6 @@ class PushView(
         // Adds a listener for audio frames captured by the live pusher.
         mLivePusher?.addAudioFrameListener(listener);
 
-//        end new style
-
-        return;
-
-
-        pushEngine?.setInfoListener { i, _, _ ->
-
-            println("listener di setup $i sink  : ${sink == null}")
-//            channel.invokeMethod(i.toString(), null)
-            uiThreadHandler.post { sink?.success(i) }
-
-            when (i) {
-                MSG_INFO_AUDIO_STARTED_CAPTURE -> isAudioCaptured = true
-                MSG_INFO_AUDIO_STOPED_CAPTURE -> isAudioCaptured = false
-                MSG_INFO_VIDEO_STARTED_CAPTURE -> isVideoCaptured = true
-                MSG_INFO_VIDEO_STOPED_CAPTURE -> isVideoCaptured = false
-
-
-            }
-
-        }
-
-        pushEngine?.setErrorListener { _, _, e -> println("error mesej is: $e") }
     }
 
     private fun setupPushEngine(option: PushPlayerOption) {
@@ -134,20 +101,20 @@ class PushView(
         // Create a VeLivePusherConfiguration instance.
         // Create a VeLivePusherConfiguration instance.
         val config = VeLivePusherConfiguration()
-// Set the context.
-// Set the context.
+        // Set the context.
+        // Set the context.
         config.context = mContext
-// The number of attempts to reconnect after the initial attempt fails. The default value is 3.
-// The number of attempts to reconnect after the initial attempt fails. The default value is 3.
+        // The number of attempts to reconnect after the initial attempt fails. The default value is 3.
+        // The number of attempts to reconnect after the initial attempt fails. The default value is 3.
         config.reconnectCount = 3
-// The time interval between each attempt to reconnect, in seconds. The default value is 5.
-// The time interval between each attempt to reconnect, in seconds. The default value is 5.
+        // The time interval between each attempt to reconnect, in seconds. The default value is 5.
+        // The time interval between each attempt to reconnect, in seconds. The default value is 5.
         config.reconnectIntervalSeconds = 5
-// Configure video capture settings.
-// Configure video capture settings.
+        // Configure video capture settings.
+        // Configure video capture settings.
         config.videoCaptureConfig = videoCaptureConfig
-// Configure audio capture settings.
-// Configure audio capture settings.
+        // Configure audio capture settings.
+        // Configure audio capture settings.
         config.audioCaptureConfig = audioCaptureConfig
 
         mLivePusher = config.build()
@@ -204,38 +171,14 @@ class PushView(
         mLivePusher?.videoEncoderConfiguration = videoEncoderConfig
         mLivePusher?.audioEncoderConfiguration = audioEncoderConfig
 
+        //        TODO create 3 more enum from dart to pass for this data
+        mLivePusher?.setVideoMirror(
+            VeLivePusherDef.VeLiveVideoMirrorType.VeLiveVideoMirrorCapture, true
+        )
+
 
         // bind with UI
         mLivePusher?.setRenderView(findViewById(R.id.live_push_surface_view))
-
-//        TODO create 3 more enum from dart to pass for this data
-        mLivePusher?.setVideoMirror(
-            VeLivePusherDef.VeLiveVideoMirrorType.VeLiveVideoMirrorCapture,
-            true
-        )
-
-//        end new style
-
-        return;
-
-
-        val builder = LiveCoreBuilder()
-        // setup live parameters, just for reference
-        builder.videoWidth = option.videoWidth
-        builder.videoHeight = option.videoHeight
-        // fps
-        builder.videoFps = option.videoFps
-        builder.videoBitrate = option.videoBitrate
-        builder.videoMaxBitrate = option.videoMaxBitrate
-        builder.videoMinBitrate = option.videoMinBitrate
-        // init pushEngine
-        pushEngine = builder.liveCoreEngine.liveCore
-
-        // setup preview
-        if (option.enablePreview) {
-            val surfaceView = findViewById<SurfaceView>(R.id.live_push_surface_view)
-            pushEngine?.setDisplay(surfaceView)
-        }
 
 
     }
@@ -246,13 +189,6 @@ class PushView(
         mLivePusher?.release()
         mLivePusher = null
 
-        return;
-
-
-        pushEngine?.stopAudioCapture()
-        pushEngine?.stopVideoCapture()
-        pushEngine?.stop()
-        pushEngine?.release()
     }
 
     override fun startVideoCapture() {
@@ -260,10 +196,6 @@ class PushView(
         // Start video capture.
         mLivePusher?.startVideoCapture(VeLivePusherDef.VeLiveVideoCaptureType.VeLiveVideoCaptureFrontCamera)
 
-        return;
-
-        // video capture
-        pushEngine?.startVideoCapture()
 
     }
 
@@ -273,43 +205,28 @@ class PushView(
         // Start video capture.
         mLivePusher?.stopVideoCapture()
 
-        return;
-
-        pushEngine?.stopVideoCapture()
     }
 
     override fun startAudioCapture() {
         // Start audio capture.
         mLivePusher?.startAudioCapture(VeLivePusherDef.VeLiveAudioCaptureType.VeLiveAudioCaptureMicrophone)
 
-        return;
-        // audio capture
-        pushEngine?.startAudioCapture()
 
     }
 
     override fun stopAudioCapture() {
         mLivePusher?.stopAudioCapture()
 
-        return;
-        pushEngine?.stopAudioCapture()
     }
 
     override fun startPublish(url: String) {
         mLivePusher?.startPush(url);
 
-        return;
-
-        // start publish
-        pushEngine?.start(url)
     }
 
     override fun stopPublish() {
         mLivePusher?.stopPush()
 
-        return;
-
-        pushEngine?.stop()
     }
 
     fun test() {
