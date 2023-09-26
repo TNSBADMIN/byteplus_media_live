@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.SurfaceView
 import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ss.avframework.live.VeLivePusher
@@ -15,7 +14,6 @@ import com.ss.avframework.live.VeLivePusherDef.VeLiveAudioEncoderConfiguration
 import com.ss.avframework.live.VeLivePusherDef.VeLiveVideoCaptureConfiguration
 import com.ss.avframework.live.VeLivePusherDef.VeLiveVideoEncoderConfiguration
 import com.ss.avframework.live.VeLivePusherDef.VeLiveVideoResolution.VeLiveVideoResolution720P
-import com.ss.videoarch.liveplayer.AppInfo.mContext
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
@@ -103,7 +101,7 @@ class PushView(
         val config = VeLivePusherConfiguration()
         // Set the context.
         // Set the context.
-        config.context = mContext
+        config.context = context
         // The number of attempts to reconnect after the initial attempt fails. The default value is 3.
         // The number of attempts to reconnect after the initial attempt fails. The default value is 3.
         config.reconnectCount = 3
